@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import NewsList from './components/NewsList';
 
 function App() {
   const [data, setData] = useState(null);
@@ -23,6 +24,7 @@ function App() {
       <div>
         <button onClick={onClick}>Load News</button>
       </div>
+      <NewsList />
       <div>{data && <pre>{JSON.stringify(data, null, 2)}</pre>}</div>
     </div>
   );

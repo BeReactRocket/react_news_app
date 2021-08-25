@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+# React News App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+News Single Page Application with async logics.
 
-## Available Scripts
+### Prior Knowledge with JavaScipt
 
-In the project directory, you can run:
+- Basic
+  ```js
+  function printMe(text) {
+    console.log(text);
+  }
 
-### `yarn start`
+  setTimeout(() => printMe('hello'), 1000);
+  ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Callback
+  ```js
+  function asyncIncreaser(number, operand, timer, cb) {
+    setTimeout(() => {
+      const increasedNumber = number + operand;
+      if (cb && typeof cb === 'function') {
+        cb(increasedNumber);
+      }
+    }, timer * 1000);
+  }
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  asyncIncreaser(10, 99, 3, console.log);
+  ```
 
-### `yarn test`
+- Callback Hell
+  ```js
+  function asyncIncreaser(number, operand, timer, cb) {
+  setTimeout(() => {
+    const increasedNumber = number + operand;
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    if (cb && typeof cb === 'function') {
+      cb(increasedNumber);
+    }
+    }, timer * 1000);
+  }
 
-### `yarn build`
+  console.log('Async Logic Start');
+  console.time('async');
+  asyncIncreaser(1, 2, 1, (result) => {
+    console.log('Depth #1');
+    console.log(result); // prints 3 at least 1 second later.
+    asyncIncreaser(result, 3, 2, (result) => {
+      console.log('Depth #2');
+      console.log(result); // prints 6 at least 3 seconds later.
+      asyncIncreaser(result, 4, 3, (result) => {
+        console.log('Depth #3');
+        console.log(result); // prints 10 at least 6 seconds later.
+        console.timeEnd('async');
+      });
+    });
+  });
+  ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Promise
+  ```js
+  function promiseIncreaser(number, operand, timer) {
+    return new Promise((res, rej) => {
+      if (typeof number !== 'number' || typeof operand !== 'number') {
+        return rej(new Error('Give a number'));
+      }
+      setTimeout(() => {
+        const increasedNumber = number + operand;
+        res(increasedNumber);
+      }, timer * 1000);
+    });
+  }
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  console.log('Async Logic Start');
+  console.time('async');
+  promiseIncreaser(1, 2, 1)
+    .then((result) => {
+      console.log('Order #1');
+      console.log(result);
+      return promiseIncreaser(result, 3, 2);
+    })
+    .then((result) => {
+      console.log('Order #2');
+      console.log(result);
+      return promiseIncreaser(result, 4, 3);
+    })
+    .then((result) => {
+      console.log('Order #3');
+      console.log(result);
+      console.timeEnd('async');
+    })
+    .catch(console.error);
+  ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Async/Await(ES2017~, ES8~)
+  ```js
+  function asyncAwaitIncreaser(number, operand, timer) {
+    return new Promise((res, rej) => {
+      if (typeof number !== 'number' || typeof operand !== 'number') {
+        return rej(new Error('Give a number'));
+      }
+      setTimeout(() => {
+        const increasedNumber = number + operand;
+        res(increasedNumber);
+      }, timer * 1000);
+    });
+  }
 
-### `yarn eject`
+  (async function () {
+    console.log('Async Logic Start');
+    console.time('async');
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    try {
+      console.log('Order #1');
+      let result = await asyncAwaitIncreaser(1, 2, 1);
+      console.log(result);
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+      console.log('Order #2');
+      result = await asyncAwaitIncreaser(result, 3, 2);
+      console.log(result);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+      console.log('Order #3');
+      result = await asyncAwaitIncreaser(result, 4, 3);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    console.timeEnd('async');
+  })();
+  ```

@@ -15,11 +15,13 @@ const NewsListBlock = styled.div`
   }
 `;
 
-const URL = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${process.env.REACT_APP_NEWS_API}`;
 
-const NewsList = () => {
+const NewsList = ({ category }) => {
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const query = category === 'all' ? '' : `&category=${category}`;
+  const URL = `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=${process.env.REACT_APP_NEWS_API}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +36,7 @@ const NewsList = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [URL]);
 
   if (loading) {
     return <NewsListBlock>Loading...</NewsListBlock>;
